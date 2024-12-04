@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Hospital Appointment Booking</title>
+	<style>
+		body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #555;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"], input[type="date"], select {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"]:focus, input[type="date"]:focus, select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .back-btn {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+            display: block;
+            margin-top: 20px;
+            text-decoration: none;
+            width: 100%;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .slot-info {
+            font-size: 14px;
+            color: #777;
+            margin-top: 8px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 2em;
+            }
+        }
+	</style>
+</head>
+<body>
+<div class="container">
+	<h2>Book Your Appointment</h2>
+
+	<!-- Using 'onsubmit' to handle form submission -->
+	<form role="form" method="post" th:action="@{/patient/bookappointment/save}" th:object="${appointmentForm}" onsubmit="event.preventDefault(); submitForm();">
+
+		<div class="form-group">
+			<label for="appDocId"><h4>Doctor Name:</h4></label>
+			<select id="appDocId" name="doctorId" onchange="findSlot()" required>
+				<option value="">Select a Doctor</option>
+				<option th:each="doctor : ${doctors}" th:value="${doctor.doctor_id}" th:text="${doctor.doctor_name}"></option>
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="patientId"><h4>Patient ID:</h4></label>
+			<input type="text" id="patientId" th:field="*{patientId}" th:value="${pid}" readonly />
+		</div>
+
+		<div class="form-group">
+			<label for="vdate"><h4>Visit Date:</h4></label>
+			<input id="vdate" type="date" name="visitDate" onchange="findSlot()" th:field="*{visitDate}" required />
+		</div>
+
+		<div class="form-group">
+			<label for="slot">Select Slot:</label>
+			<select id="slot" name="slotAsString">
+				<option value="slot1">Slot 1 - 10AM- 12AM</option>
+				<option value="slot2">Slot 2 - 1PM - 3PM</option>
+				<option value="slot3">Slot 3 - 3PM - 6PM</option>
+			</select>
+			<p class="slot-info">15 mins/slot</p>
+		</div>
+		<div class="form-group">
+			<button type="submit">Book Appointment</button>
+		</div>
+	</form>
+
+	<a href="#" onclick="history.go(-1)" class="back-btn">Back to Home</a>
+
+</div>
+<script>
+	function submitForm() {
+        alert("Appointment booked successfully!");
+        document.querySelector('form').submit();
+    }
+
+    var total_slots = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+    var booked_slots = [];
+    var available_slots = [];
+
+    async function getapi(doctor_list_url) {
+        try {
+            const response = await fetch(doctor_list_url);
+            if (!response.ok) {
+                console.error('Error fetching data:', response.statusText);
+                return;
+            }
+            data = await response.json();
+            console.log('Fetched Data:', data);
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    }
+
+    function performOperation() {
+        var appointments = data._embedded.appointment;
+        var len = appointments.length;
+
+        for (var i = 0; i < len; i++) {
+            booked_slots.push(appointments[i].slot);
+        }
+        available_slots = total_slots.filter(x => !booked_slots.includes(x));
+        var select = document.getElementById("selectSlot");
+        select.innerHTML = "<option value=''>Choose an available slot</option>";
+        available_slots.forEach(function (slot) {
+            select.innerHTML += "<option value=\"" + slot + "\">Slot " + slot + " - Available</option>";
+        });
+    }
+
+    function findSlot() {
+        var vdate = document.getElementById("vdate").value;
+        var docId = document.getElementById("appDocId").value;
+        if (vdate && docId) {
+            var url = 'http://localhost:8082/appointment/search/findByDoctorIdAndVisitDate?id=' + docId + '&vdate=' + vdate;
+            getapi(url).then(() => performOperation());
+        }
+    }
+</script>
+</body>
+</html>

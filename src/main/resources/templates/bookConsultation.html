@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Consultation</title>
+</head>
+<body>
+<h2>Book Consultation</h2>
+<form th:action="@{/consultation/book}" method="post">
+    <div>
+        <label for="patientId">Patient ID:</label>
+        <input type="text" id="patientId" name="patientId" required/>
+    </div>
+    <div>
+        <label for="doctorId">Doctor ID:</label>
+        <input type="text" id="doctorId" name="doctorId" required/>
+    </div>
+    <div>
+        <label for="date">Consultation Date (YYYY-MM-DDTHH:MM:SS):</label>
+        <input type="text" id="date" name="date" required/>
+    </div>
+    <div>
+        <label for="notes">Notes:</label>
+        <textarea id="notes" name="notes"></textarea>
+    </div>
+    <button type="submit">Book Consultation</button>
+</form>
+</body>
+</html>

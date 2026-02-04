@@ -35,7 +35,7 @@ It allows **patients and doctors** to manage appointments, prescriptions, and me
 ## Tech Stack
 
 * **Backend:** Java 17, Spring Boot 3.x, Spring Security
-* **Frontend:** Thymeleaf, Bootstrap 5
+* **Frontend:** Thymeleaf
 * **Database:** MySQL
 * **Build Tool:** Maven
 

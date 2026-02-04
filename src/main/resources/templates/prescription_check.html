@@ -1,138 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-
 <head>
-	<title>Check Prescription</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Patient Prescriptions</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-	<!-- Bootstrap CSS -->
-	<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-			crossorigin="anonymous" />
-	<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-			crossorigin="anonymous"></script>
-
-	<style>
-		body {
-            background: linear-gradient(to bottom right, #e3f2fd, #90caf9);
-            font-family: 'Arial', sans-serif;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            color: #0d6efd;
-            font-size: 32px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-        }
-
-        h2, p {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        table {
-            margin-top: 20px;
-        }
-
-        thead {
-            background: #0d6efd;
-            color: white;
-        }
-
-        th {
-            text-align: center;
-            padding: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        td {
-            text-align: center;
-            padding: 10px;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .btn-primary {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 20px;
-            border-radius: 30px;
-            background: #0d6efd;
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background: #084298;
-            color: white;
-        }
-
-        .action-buttons {
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 28px;
-            }
-
-            th, td {
-                font-size: 14px;
-            }
-        }
-	</style>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 
-<body>
+<body class="bg-light py-4">
+
 <div class="container">
-	<h1>Patient Prescriptions</h1>
-	<h2 th:text="'Patient Name: ' + ${name}"></h2>
-	<div class="table-responsive">
-		<table class="table table-bordered">
-			<thead>
-			<tr>
-				<th>Prescription ID</th>
-				<th>Doctor ID</th>
-				<th>Issued Date & Time</th>
-				<th>Findings</th>
-				<th>Medicines</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr th:each="presc : ${prescriptions}">
-				<td th:text="${presc.prescription_id}"></td>
-				<td th:text="${presc.doctorId}"></td>
-				<td th:text="${presc.issuedDateTime}"></td>
-				<td th:text="${presc.findings}"></td>
-				<td th:text="${presc.medicines}"></td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
-	<div class="action-buttons">
-		<a href="/" class="btn btn-primary">Go to Home</a>
+	<div class="card shadow-sm">
+		<div class="card-body">
+
+			<h4 class="mb-3">Patient Prescriptions</h4>
+
+			<p class="mb-3">
+				<strong>Patient Name:</strong>
+				<span th:text="${name}"></span>
+			</p>
+
+			<div class="table-responsive">
+				<table class="table table-bordered table-sm">
+					<thead class="table-primary">
+					<tr>
+						<th>Prescription ID</th>
+						<th>Doctor ID</th>
+						<th>Issued Date</th>
+						<th>Findings</th>
+						<th>Medicines</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr th:each="presc : ${prescriptions}">
+						<td th:text="${presc.prescription_id}"></td>
+						<td th:text="${presc.doctorId}"></td>
+						<td th:text="${presc.issuedDateTime}"></td>
+						<td th:text="${presc.findings}"></td>
+						<td th:text="${presc.medicines}"></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<a href="/" class="btn btn-outline-primary btn-sm mt-2">
+				Back to Home
+			</a>
+
+		</div>
 	</div>
 </div>
+
 </body>
 </html>
-
